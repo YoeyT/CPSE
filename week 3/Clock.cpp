@@ -16,8 +16,7 @@ void Clock::Start()
 {
     while(true)
     {
-        //in de while loop moet iets dat de tijd controleerd
-        while(true)
+        while(!((hwlib::now_us() % 60'000'000) > 0 && (hwlib::now_us() % 60'000'000) < 300'000))
         {
             Draw();
 
@@ -50,11 +49,21 @@ void Clock::Start()
             }
         }
 
-        minuteTime += 1;
-        if(((minuteTime + 12) % 12) == 0)
+        if(minuteTime == 59)
         {
+            minuteTime = 0;
             hourTime += 1;
         }
+        else
+        {
+            minuteTime += 1;
+            if(((minuteTime + 12) % 12) == 0)
+            {
+                hourTime += 1;
+            }
+        }
+        //give cooldown
+        hwlib::wait_ms(300);
     }
 }
 
